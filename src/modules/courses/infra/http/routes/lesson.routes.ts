@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { getCustomRepository, getRepository } from 'typeorm';
-import Lesson from '../../models/Lesson';
-import LessonRepository from '../repositories/LessonRepository';
 
-import CreateLessonService from '../services/CreateLessonService';
+import Lesson from '@modules/courses/infra/database/entities/Lesson';
+
+import LessonRepository from '@modules/courses/repositories/LessonRepository';
+import CreateLessonService from '@modules/courses/services/CreateLessonService';
 
 const lessonRoutes = Router();
 

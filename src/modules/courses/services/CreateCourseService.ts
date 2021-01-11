@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 
-import Course from '../models/Course';
+import Course from '../infra/database/entities/Course';
 
 interface CourseDTO {
   name: string;

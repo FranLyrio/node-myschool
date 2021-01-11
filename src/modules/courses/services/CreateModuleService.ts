@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 
-import Module from '../models/Module';
+import Module from '../infra/database/entities/Module';
 
 interface ModuleDTO {
   name: string;

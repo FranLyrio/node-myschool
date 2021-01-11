@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { getCustomRepository, getRepository } from 'typeorm';
-import Module from '../../models/Module';
+import Module from '@modules/courses/infra/database/entities/Module';
 
-import ModuleRepository from '../repositories/ModuleRepository';
-import CreateModuleService from '../services/CreateModuleService';
+import ModuleRepository from '@modules/courses/repositories/ModuleRepository';
+import CreateModuleService from '@modules/courses/services/CreateModuleService';
 
 const moduleRoutes = Router();
 

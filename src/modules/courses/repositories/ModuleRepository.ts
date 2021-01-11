@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import Module from '../models/Module';
+import Module from '../infra/database/entities/Module';
 
 @EntityRepository(Module)
 export default class ModuleRepository extends Repository<Module> {
