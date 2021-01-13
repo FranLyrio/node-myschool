@@ -1,24 +1,30 @@
 import { getRepository } from 'typeorm';
+import ICreateModuleDTO from '../dtos/ICreateModuleDTO';
 
-import Module from '../infra/database/entities/Module';
-
-interface ModuleDTO {
-  name: string;
-  description: string;
-  course_id: string;
-}
+import Module from '../infra/typeorm/entities/Module';
+import IModuleRepository from '../repositories/IModuleRepository';
 
 export default class CreateModuleService {
-  public async execute({ 
+  constructor(
+    private moduleRepository: IModuleRepository,
+  ) {}
+  
+  public async execute({
     name,
     description,
     course_id
-  }: ModuleDTO): Promise<Module> {
-    const moduleRepository = getRepository(Module);
+  }: ICreateModuleDTO): Promise<Module> {
+    const findModuleWithSameName = await this.moduleRepository.findByName(name);
 
-    const moduleCreated = { name, description, course_id };
+    if(findModuleWithSameName) {
+      throw new Error('Esse módulo já existe');
+    }
 
-    const module = await moduleRepository.save(moduleCreated);
+    const module = await this.moduleRepository.create({
+      name,
+      description,
+      course_id
+    });
 
     return module;
   }

@@ -1,53 +1,32 @@
 import { Router } from 'express';
-import { getCustomRepository, getRepository } from 'typeorm';
-import Module from '@modules/courses/infra/database/entities/Module';
 
-import ModuleRepository from '@modules/courses/repositories/ModuleRepository';
+import ModuleRepository from '@modules/courses/infra/typeorm/repositories/ModuleRepository';
 import CreateModuleService from '@modules/courses/services/CreateModuleService';
 
 const moduleRoutes = Router();
 
-moduleRoutes.get('/', async (request, response) => {
-  try {
-    const moduleRepository = getRepository(Module);
+// moduleRoutes.get('/', async (request, response) => {
+//   const moduleRepository = getRepository(Module);
 
-    const modules = await moduleRepository.find();
-    
-    return response.json(modules);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
-});
-
-moduleRoutes.get('/:id', async (request, response) => {
-  try {
-    const { id } = request.params;
-    const moduleRepository = getCustomRepository(ModuleRepository);
+//   const modules = await moduleRepository.find();
   
-    const module = await moduleRepository.findById(id);
-    
-    return response.json(module);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
-});
+//   return response.json(modules);
+// });
 
 moduleRoutes.post('/', async (request, response) => {
-  try {
-    const { name, description, course_id } = request.body;
+  const moduleRepository = new ModuleRepository();
 
-    const createModuleService = new CreateModuleService();
-  
-    const module = await createModuleService.execute({
-      name,
-      description,
-      course_id
-    });
-  
-    return response.json(module);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
+  const { name, description, course_id } = request.body;
+
+  const createModuleService = new CreateModuleService(moduleRepository);
+
+  const module = await createModuleService.execute({
+    name,
+    description,
+    course_id
+  });
+
+  return response.json(module);
 });
 
 export default moduleRoutes;

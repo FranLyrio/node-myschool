@@ -1,54 +1,33 @@
 import { Router } from 'express';
-import { getCustomRepository, getRepository } from 'typeorm';
 
-import Lesson from '@modules/courses/infra/database/entities/Lesson';
-
-import LessonRepository from '@modules/courses/repositories/LessonRepository';
+import LessonRepository from '@modules/courses/infra/typeorm/repositories/LessonRepository';
 import CreateLessonService from '@modules/courses/services/CreateLessonService';
 
 const lessonRoutes = Router();
 
-lessonRoutes.get('/', async (request, response) => {
-  try {
-    const lessonRepository = getRepository(Lesson);
+// lessonRoutes.get('/', async (request, response) => {
+//   const lessonRepository = getRepository(Lesson);
 
-    const lessons = await lessonRepository.find();
-    
-    return response.json(lessons);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
-});
-
-lessonRoutes.get('/:id', async (request, response) => {
-  try {
-    const { id } = request.params;
-    const lessonRepository = getCustomRepository(LessonRepository);
+//   const lessons = await lessonRepository.find();
   
-    const lesson = await lessonRepository.findById(id);
-    
-    return response.json(lesson);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
-});
+//   return response.json(lessons);
+// });
 
 lessonRoutes.post('/', async (request, response) => {
-  try {
-    const { name, description, link } = request.body;
+  const lessonRepository = new LessonRepository();
 
-    const createLessonService = new CreateLessonService();
-  
-    const lesson = await createLessonService.execute({
-      name,
-      description,
-      link
-    });
-  
-    return response.json(lesson);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
+  const { name, description, link, module_id } = request.body;
+
+  const createLessonService = new CreateLessonService(lessonRepository);
+
+  const lesson = await createLessonService.execute({
+    name,
+    description,
+    link,
+    module_id
+  });
+
+  return response.json(lesson);
 });
 
 export default lessonRoutes;

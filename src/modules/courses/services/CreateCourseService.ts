@@ -1,24 +1,29 @@
-import { getRepository } from 'typeorm';
+import ICreateCourseDTO from '@modules/courses/dtos/ICreateCourseDTO';
+import ICourseRepository from '../repositories/ICourseRepository';
 
-import Course from '../infra/database/entities/Course';
-
-interface CourseDTO {
-  name: string;
-  description: string;
-  color: string;
-}
+import Course from '../infra/typeorm/entities/Course';
 
 export default class CreateCourseService {
-  public async execute({ 
+  constructor(
+    private courseRepository: ICourseRepository,
+  ) {}
+
+  public async execute({
     name,
     color,
     description
-  }: CourseDTO): Promise<Course> {
-    const courseRepository = getRepository(Course);
+  }: ICreateCourseDTO): Promise<Course> {
+    const findCourseWithSameName = await this.courseRepository.findByName(name);
 
-    const courseCreated = { name, color, description };
+    if(findCourseWithSameName) {
+      throw new Error('Esse curso já existe');
+    }
 
-    const course = await courseRepository.save(courseCreated);
+    const course = await this.courseRepository.create({
+      name,
+      color,
+      description
+    });
 
     return course;
   }

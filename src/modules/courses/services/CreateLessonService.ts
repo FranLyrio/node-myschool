@@ -1,24 +1,29 @@
 import { getRepository } from 'typeorm';
+import ICreateLessonDTO from '../dtos/ICreateLessonDTO';
 
-import Lesson from '../infra/database/entities/Lesson';
-
-interface LessonDTO {
-  name: string;
-  description: string;
-  link: string;
-}
+import Lesson from '../infra/typeorm/entities/Lesson';
+import ILessonRepository from '../repositories/ILessonRepository';
 
 export default class CreateLessonService {
+  constructor(
+    private lessonRepository: ILessonRepository,
+  ) {}
+
   public async execute({ 
     name,
     link,
-    description
-  }: LessonDTO): Promise<Lesson> {
-    const lessonRepository = getRepository(Lesson);
+    description,
+    module_id
+  }: ICreateLessonDTO): Promise<Lesson> {
+    const lessonCreated = { name, link, description, module_id };
 
-    const lessonCreated = { name, link, description };
+    const findLessonWithSameName = await this.lessonRepository.findByName(name);
 
-    const lesson = await lessonRepository.save(lessonCreated);
+    if(findLessonWithSameName) {
+      throw new Error('Essa aula já existe');
+    }
+
+    const lesson = await this.lessonRepository.create(lessonCreated);
 
     return lesson;
   }

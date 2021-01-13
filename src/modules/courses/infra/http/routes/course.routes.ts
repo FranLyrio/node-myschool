@@ -1,54 +1,32 @@
 import { Router } from 'express';
-import { getCustomRepository, getRepository } from 'typeorm';
 
-import Course from '@modules/courses/infra/database/entities/Course';
-
-import CourseRepository from '@modules/courses/repositories/CourseRepository';
+import CourseRepository from '@modules/courses/infra/typeorm/repositories/CourseRepository';
 import CreateCourseService from '@modules/courses/services/CreateCourseService';
 
 const courseRoutes = Router();
+// courseRoutes.get('/', async (request, response) => {
+//   const courseRepository = getRepository(Course);
 
-courseRoutes.get('/', async (request, response) => {
-  try {
-    const courseRepository = getRepository(Course);
-
-    const courses = await courseRepository.find();
-    
-    return response.json(courses);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
-});
-
-courseRoutes.get('/:id', async (request, response) => {
-  try {
-    const { id } = request.params;
-    const courseRepository = getCustomRepository(CourseRepository);
+//   const courses = await courseRepository.find();
   
-    const course = await courseRepository.findById(id);
-    
-    return response.json(course);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
-});
+//   return response.json(courses);
+
+// });
 
 courseRoutes.post('/', async (request, response) => {
-  try {
-    const { name, description, color } = request.body;
+  const courseRepository = new CourseRepository();
 
-    const createCourseService = new CreateCourseService();
+  const { name, description, color } = request.body;
 
-    const course = await createCourseService.execute({
-      name,
-      description,
-      color
-    });
+  const createCourseService = new CreateCourseService(courseRepository);
 
-    return response.json(course);
-  } catch (error) {
-    return response.status(400).json({ err: error.message });
-  }
+  const course = await createCourseService.execute({
+    name,
+    description,
+    color
+  });
+
+  return response.json(course);
 });
 
 export default courseRoutes;
