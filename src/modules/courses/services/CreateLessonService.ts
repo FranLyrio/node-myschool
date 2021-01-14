@@ -1,11 +1,14 @@
-import { getRepository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
+
 import ICreateLessonDTO from '../dtos/ICreateLessonDTO';
 
 import Lesson from '../infra/typeorm/entities/Lesson';
 import ILessonRepository from '../repositories/ILessonRepository';
 
+@injectable()
 export default class CreateLessonService {
   constructor(
+    @inject('LessonRepository')
     private lessonRepository: ILessonRepository,
   ) {}
 

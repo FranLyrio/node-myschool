@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 
-import LessonRepository from '@modules/courses/infra/typeorm/repositories/LessonRepository';
 import CreateLessonService from '@modules/courses/services/CreateLessonService';
 
 const lessonRoutes = Router();
@@ -14,11 +14,9 @@ const lessonRoutes = Router();
 // });
 
 lessonRoutes.post('/', async (request, response) => {
-  const lessonRepository = new LessonRepository();
-
   const { name, description, link, module_id } = request.body;
 
-  const createLessonService = new CreateLessonService(lessonRepository);
+  const createLessonService = container.resolve(CreateLessonService);
 
   const lesson = await createLessonService.execute({
     name,

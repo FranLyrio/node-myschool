@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 
-import ModuleRepository from '@modules/courses/infra/typeorm/repositories/ModuleRepository';
 import CreateModuleService from '@modules/courses/services/CreateModuleService';
 
 const moduleRoutes = Router();
@@ -14,11 +14,9 @@ const moduleRoutes = Router();
 // });
 
 moduleRoutes.post('/', async (request, response) => {
-  const moduleRepository = new ModuleRepository();
-
   const { name, description, course_id } = request.body;
 
-  const createModuleService = new CreateModuleService(moduleRepository);
+  const createModuleService = container.resolve(CreateModuleService);
 
   const module = await createModuleService.execute({
     name,

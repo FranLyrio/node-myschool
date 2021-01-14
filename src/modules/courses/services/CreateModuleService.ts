@@ -1,11 +1,14 @@
-import { getRepository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
+
 import ICreateModuleDTO from '../dtos/ICreateModuleDTO';
 
 import Module from '../infra/typeorm/entities/Module';
 import IModuleRepository from '../repositories/IModuleRepository';
 
+@injectable()
 export default class CreateModuleService {
   constructor(
+    @inject('ModuleRepository')
     private moduleRepository: IModuleRepository,
   ) {}
   

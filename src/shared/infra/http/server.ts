@@ -4,6 +4,7 @@ import express from 'express';
 import routes from './routes';
 
 import '@shared/infra/database';
+import '@shared/container';
 
 const app = express();
 

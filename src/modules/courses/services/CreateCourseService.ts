@@ -1,10 +1,14 @@
+import { inject, injectable } from 'tsyringe';
+
 import ICreateCourseDTO from '@modules/courses/dtos/ICreateCourseDTO';
 import ICourseRepository from '../repositories/ICourseRepository';
 
 import Course from '../infra/typeorm/entities/Course';
 
+@injectable()
 export default class CreateCourseService {
   constructor(
+    @inject('CourseRepository')
     private courseRepository: ICourseRepository,
   ) {}
 
