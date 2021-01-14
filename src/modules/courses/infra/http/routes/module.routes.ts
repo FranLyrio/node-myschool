@@ -1,30 +1,12 @@
 import { Router } from 'express';
-import { container } from 'tsyringe';
 
-import CreateModuleService from '@modules/courses/services/CreateModuleService';
+import ModulesController from '../controllers/ModulesController';
 
 const moduleRoutes = Router();
+const modulesController = new ModulesController();
 
-// moduleRoutes.get('/', async (request, response) => {
-//   const moduleRepository = getRepository(Module);
+moduleRoutes.get('/', modulesController.index);
 
-//   const modules = await moduleRepository.find();
-  
-//   return response.json(modules);
-// });
-
-moduleRoutes.post('/', async (request, response) => {
-  const { name, description, course_id } = request.body;
-
-  const createModuleService = container.resolve(CreateModuleService);
-
-  const module = await createModuleService.execute({
-    name,
-    description,
-    course_id
-  });
-
-  return response.json(module);
-});
+moduleRoutes.post('/', modulesController.create);
 
 export default moduleRoutes;

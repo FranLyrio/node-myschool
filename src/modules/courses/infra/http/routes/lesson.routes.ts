@@ -1,31 +1,12 @@
 import { Router } from 'express';
-import { container } from 'tsyringe';
 
-import CreateLessonService from '@modules/courses/services/CreateLessonService';
+import LessonsController from '../controllers/LessonsController';
 
 const lessonRoutes = Router();
+const lessonsController = new LessonsController();
 
-// lessonRoutes.get('/', async (request, response) => {
-//   const lessonRepository = getRepository(Lesson);
+lessonRoutes.get('/', lessonsController.index);
 
-//   const lessons = await lessonRepository.find();
-  
-//   return response.json(lessons);
-// });
-
-lessonRoutes.post('/', async (request, response) => {
-  const { name, description, link, module_id } = request.body;
-
-  const createLessonService = container.resolve(CreateLessonService);
-
-  const lesson = await createLessonService.execute({
-    name,
-    description,
-    link,
-    module_id
-  });
-
-  return response.json(lesson);
-});
+lessonRoutes.post('/', lessonsController.create);
 
 export default lessonRoutes;
