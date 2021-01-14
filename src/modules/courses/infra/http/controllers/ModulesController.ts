@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
-import CreateModuleService from '@modules/courses/services/CreateModuleService';
-import { container } from 'tsyringe';
 import { getRepository } from 'typeorm';
+
 import Module from '../../typeorm/entities/Module';
+import CreateModuleService from '@modules/courses/services/CreateModuleService';
+import ModuleRepository from '../../typeorm/repositories/ModuleRepository';
 
 export default class ModulesController {
   public async create(request: Request, response: Response): Promise<Response> {
+    const moduleRepository = new ModuleRepository();
     const { name, description, course_id } = request.body;
 
-    const createModuleService = container.resolve(CreateModuleService);
+    const createModuleService = new CreateModuleService(moduleRepository);
 
     const module = await createModuleService.execute({
       name,

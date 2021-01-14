@@ -1,14 +1,9 @@
-import { inject, injectable } from 'tsyringe';
-
 import ICreateModuleDTO from '../dtos/ICreateModuleDTO';
 
-import Module from '../infra/typeorm/entities/Module';
 import IModuleRepository from '../repositories/IModuleRepository';
 
-@injectable()
 export default class CreateModuleService {
   constructor(
-    @inject('ModuleRepository')
     private moduleRepository: IModuleRepository,
   ) {}
   
@@ -16,7 +11,7 @@ export default class CreateModuleService {
     name,
     description,
     course_id
-  }: ICreateModuleDTO): Promise<Module> {
+  }: ICreateModuleDTO): Promise<ICreateModuleDTO> {
     const findModuleWithSameName = await this.moduleRepository.findByName(name);
 
     if(findModuleWithSameName) {

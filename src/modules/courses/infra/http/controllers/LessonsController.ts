@@ -1,14 +1,17 @@
 import { Request, Response } from 'express';
-import CreateLessonService from '@modules/courses/services/CreateLessonService';
-import { container } from 'tsyringe';
 import { getRepository } from 'typeorm';
 import Lesson from '../../typeorm/entities/Lesson';
 
+import CreateLessonService from '@modules/courses/services/CreateLessonService';
+import LessonRepository from '../../typeorm/repositories/LessonRepository';
+
 export default class LessonsController {
   public async create(request: Request, response: Response): Promise<Response> {
+    const lessonRepository = new LessonRepository();
+    
     const { name, description, link, module_id } = request.body;
 
-    const createLessonService = container.resolve(CreateLessonService);
+    const createLessonService = new CreateLessonService(lessonRepository);
 
     const lesson = await createLessonService.execute({
       name,
