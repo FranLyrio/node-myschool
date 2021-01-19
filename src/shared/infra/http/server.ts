@@ -3,8 +3,7 @@ import 'reflect-metadata';
 import express from 'express';
 import routes from './routes';
 
-import '@shared/infra/database';
-import '@shared/container';
+import '@shared/infra/typeorm';
 
 const app = express();
 

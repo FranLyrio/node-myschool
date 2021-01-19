@@ -31,7 +31,11 @@ export default class CourseRepository implements ICourseRepository {
     color,
     description
   }: ICreateCourseDTO): Promise<Course> {
-    const course = await this.ormRepository.save({ name, color, description });
+    const course = await this.ormRepository.save({
+      name,
+      color,
+      description
+    });
 
     return course;
   }
